@@ -21,7 +21,7 @@ import { ActiveBetsPage } from "../active-bets/ActiveBetsPage";
 import "./WalletPage.css";
 
 export function WalletPage() {
-  const [activeTab, setActiveTab] = useState<TabValue>("junhyun");
+  const [activeTab, setActiveTab] = useState<TabValue>("active-bets");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
