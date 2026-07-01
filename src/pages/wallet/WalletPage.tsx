@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AuthButton } from "../../features/auth/AuthButton";
 import { AdjustAmount } from "../../features/adjust-amount/AdjustAmount";
 import { MultiSelect } from "../../features/multi-select/MultiSelect";
@@ -30,13 +30,20 @@ export function WalletPage() {
   const [betOpen, setBetOpen] = useState(false);
   const [historyTarget, setHistoryTarget] = useState<Friend | null>(null);
   const [activeBets, setActiveBets] = useState<Bet[]>([]);
+  const initialLoad = useRef(true);
   const { canEdit, authenticatedWallet } = useAuth();
 
   const walletId = activeTab === "active-bets" ? "junhyun" : activeTab;
   const editable = canEdit(walletId);
 
   useEffect(() => {
-    return subscribeActiveBets(setActiveBets);
+    return subscribeActiveBets((bets) => {
+      setActiveBets(bets);
+      if (initialLoad.current) {
+        initialLoad.current = false;
+        if (bets.length === 0) setActiveTab("junhyun");
+      }
+    });
   }, []);
 
   useEffect(() => {
