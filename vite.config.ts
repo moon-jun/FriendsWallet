@@ -3,5 +3,5 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GITHUB_PAGES === "true" ? "/friends_wallet/" : "/",
+  base: process.env.GITHUB_PAGES === "true" ? "/FriendsWallet/" : "/",
 });
