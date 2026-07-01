@@ -1,0 +1,112 @@
+.active-bets-page {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.active-bets-empty {
+  padding: 48px 0;
+  color: var(--color-muted);
+  text-align: center;
+  font-size: 15px;
+}
+
+.bet-card {
+  border-radius: var(--radius-card);
+  padding: 18px;
+  background: var(--color-surface);
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+.bet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bet-title {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.bet-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 8px;
+  padding: 4px 10px;
+  background: var(--color-blue-soft);
+  color: var(--color-blue);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bet-wallet-label {
+  font-size: 12px;
+  color: var(--color-muted);
+  margin-bottom: 10px;
+}
+
+.bet-participants {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.bet-participant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-control);
+  padding: 10px 12px;
+  background: var(--color-bg);
+}
+
+.bet-participant-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.bet-participant-amount {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bet-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-control);
+  padding: 12px 14px;
+  background: var(--color-bg);
+  margin-bottom: 12px;
+}
+
+.bet-summary span {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.bet-summary strong {
+  font-size: 16px;
+  color: var(--color-blue);
+}
+
+.bet-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.button-win {
+  background: #e6f9f1;
+  color: var(--color-green);
+}
+
+.button-lose {
+  background: #fff0f1;
+  color: var(--color-red);
+}

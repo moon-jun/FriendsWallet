@@ -1,3 +1,47 @@
+.wallet-tabs-container {
+  display: grid;
+  gap: 8px;
+}
+
+.active-bets-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  border-radius: 14px;
+  background: #e9edf2;
+  color: var(--color-muted);
+  font-weight: 800;
+  font-size: 15px;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.active-bets-tab-active {
+  background: var(--color-blue);
+  color: white;
+}
+
+.bet-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  padding: 0 6px;
+  background: white;
+  color: var(--color-blue);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.active-bets-tab-active .bet-count-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
 .wallet-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;

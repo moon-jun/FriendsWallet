@@ -9,6 +9,7 @@ type FriendCardListProps = {
   selectedIds: string[];
   onToggleFriend: (id: string) => void;
   onOpenAdjust: (friend: Friend) => void;
+  onOpenHistory: (friend: Friend) => void;
 };
 
 export function FriendCardList({
@@ -18,6 +19,7 @@ export function FriendCardList({
   selectedIds,
   onToggleFriend,
   onOpenAdjust,
+  onOpenHistory,
 }: FriendCardListProps) {
   return (
     <div className="friend-list">
@@ -30,6 +32,7 @@ export function FriendCardList({
           selectionMode={selectionMode}
           onToggle={() => onToggleFriend(friend.id)}
           onOpenAdjust={() => onOpenAdjust(friend)}
+          onOpenHistory={() => onOpenHistory(friend)}
         />
       ))}
     </div>

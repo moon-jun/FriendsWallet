@@ -1,0 +1,59 @@
+.tx-history-list {
+  display: grid;
+  gap: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.tx-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-control);
+  padding: 12px 14px;
+  background: var(--color-bg);
+}
+
+.tx-info {
+  display: grid;
+  gap: 3px;
+}
+
+.tx-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.tx-time {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.tx-delta {
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tx-positive {
+  color: var(--color-green);
+}
+
+.tx-negative {
+  color: var(--color-red);
+}
+
+.tx-balance {
+  font-size: 11px;
+  color: var(--color-muted);
+  text-align: right;
+}
+
+.tx-empty {
+  padding: 30px 0;
+  color: var(--color-muted);
+  text-align: center;
+  font-size: 14px;
+}

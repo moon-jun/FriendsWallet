@@ -11,6 +11,7 @@ type MultiSelectProps = {
   onToggleAll: () => void;
   onOpenAdjust: () => void;
   onOpenSpecial: () => void;
+  onOpenBet: () => void;
 };
 
 export function MultiSelect({
@@ -23,12 +24,18 @@ export function MultiSelect({
   onToggleAll,
   onOpenAdjust,
   onOpenSpecial,
+  onOpenBet,
 }: MultiSelectProps) {
   if (!active) {
     return (
-      <Button variant="secondary" disabled={!editable} onClick={onStart}>
-        선택
-      </Button>
+      <div className="multi-buttons">
+        <Button variant="secondary" disabled={!editable} onClick={onStart}>
+          선택
+        </Button>
+        <Button variant="secondary" disabled={!editable} onClick={onOpenBet}>
+          배팅
+        </Button>
+      </div>
     );
   }
 

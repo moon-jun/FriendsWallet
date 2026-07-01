@@ -28,3 +28,8 @@
   grid-template-columns: 1fr 1fr auto;
   gap: 8px;
 }
+
+.multi-buttons {
+  display: flex;
+  gap: 6px;
+}

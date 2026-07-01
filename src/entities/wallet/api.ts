@@ -1,4 +1,4 @@
-﻿import {
+import {
   collection,
   doc,
   getDoc,
@@ -75,6 +75,8 @@ export async function updateFriendAmount(
     },
     { merge: true },
   );
+
+  return delta;
 }
 
 export async function getWalletPassword(walletId: WalletId) {

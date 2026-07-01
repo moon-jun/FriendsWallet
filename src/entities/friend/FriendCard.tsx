@@ -10,6 +10,7 @@ type FriendCardProps = {
   selectionMode: boolean;
   onToggle: () => void;
   onOpenAdjust: () => void;
+  onOpenHistory: () => void;
 };
 
 export function FriendCard({
@@ -19,6 +20,7 @@ export function FriendCard({
   selectionMode,
   onToggle,
   onOpenAdjust,
+  onOpenHistory,
 }: FriendCardProps) {
   const tone = friend.amount > 0 ? "positive" : friend.amount < 0 ? "negative" : "neutral";
 
@@ -32,7 +34,19 @@ export function FriendCard({
         <strong>{friend.name}</strong>
         <span>{friend.lastDelta ? `최근 ${formatWon(friend.lastDelta)}` : "변경 내역 없음"}</span>
       </div>
-      <div className={`friend-amount amount-${tone}`}>{formatWon(friend.amount)}</div>
+      <div className="friend-right">
+        <div className={`friend-amount amount-${tone}`}>{formatWon(friend.amount)}</div>
+        <button
+          className="history-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenHistory();
+          }}
+          aria-label={`${friend.name} 내역`}
+        >
+          내역
+        </button>
+      </div>
     </article>
   );
 }
