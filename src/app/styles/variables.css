@@ -1,0 +1,15 @@
+:root {
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-text: #191f28;
+  --color-muted: #8b95a1;
+  --color-line: #e5e8eb;
+  --color-blue: #3182f6;
+  --color-blue-soft: #e8f3ff;
+  --color-red: #f04452;
+  --color-green: #00b886;
+  --color-shadow: rgba(0, 0, 0, 0.04);
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --max-mobile: 480px;
+}

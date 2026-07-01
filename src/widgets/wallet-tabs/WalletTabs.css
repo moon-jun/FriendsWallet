@@ -1,0 +1,22 @@
+.wallet-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  border-radius: 14px;
+  padding: 4px;
+  background: #e9edf2;
+}
+
+.wallet-tab {
+  min-height: 42px;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--color-muted);
+  font-weight: 800;
+}
+
+.wallet-tab-active {
+  background: white;
+  color: var(--color-text);
+  box-shadow: 0 1px 4px var(--color-shadow);
+}

@@ -1,0 +1,22 @@
+.special-form {
+  display: grid;
+  gap: 10px;
+}
+
+.special-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-control);
+  padding: 14px;
+  background: var(--color-bg);
+}
+
+.special-preview span {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.special-preview strong {
+  color: var(--color-blue);
+}

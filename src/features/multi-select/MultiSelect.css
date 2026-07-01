@@ -1,0 +1,30 @@
+.multi-panel {
+  position: sticky;
+  bottom: 14px;
+  z-index: 10;
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 12px;
+  background: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.multi-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.multi-link {
+  background: transparent;
+  color: var(--color-blue);
+  font-weight: 700;
+}
+
+.multi-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+}

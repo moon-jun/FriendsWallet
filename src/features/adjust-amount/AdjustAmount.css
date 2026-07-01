@@ -1,0 +1,11 @@
+.adjust-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.adjust-custom {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}

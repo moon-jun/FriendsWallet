@@ -1,0 +1,90 @@
+.button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: var(--radius-control);
+  padding: 0 16px;
+  font-weight: 700;
+  transition: transform 120ms ease, background 120ms ease, opacity 120ms ease;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.button-primary {
+  background: var(--color-blue);
+  color: white;
+}
+
+.button-secondary {
+  background: var(--color-blue-soft);
+  color: var(--color-blue);
+}
+
+.button-danger {
+  background: #fff0f1;
+  color: var(--color-red);
+}
+
+.button-ghost {
+  background: transparent;
+  color: var(--color-muted);
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  padding: 0 14px;
+  background: white;
+  color: var(--color-text);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-blue);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-blue);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  align-items: end;
+  background: rgba(0, 0, 0, 0.34);
+}
+
+.modal-sheet {
+  width: min(100%, var(--max-mobile));
+  margin: 0 auto;
+  border-radius: 24px 24px 0 0;
+  padding: 22px 18px 24px;
+  background: white;
+}
+
+.modal-title {
+  margin: 0 0 14px;
+  font-size: 20px;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
