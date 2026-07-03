@@ -57,7 +57,7 @@ export function CreateBetModal({ open, friends, onClose, onSubmit }: CreateBetMo
     [checkedEntries],
   );
   const mult = Number(multiplier || 0);
-  const expectedWin = Math.round(totalBet * mult);
+  const expectedProfit = Math.round(totalBet * mult) - totalBet;
   const canSubmit = title.trim() && mult > 0 && checkedEntries.length > 0 && totalBet > 0;
 
   function handleSubmit() {
@@ -119,7 +119,7 @@ export function CreateBetModal({ open, friends, onClose, onSubmit }: CreateBetMo
 
         <div className="bet-preview">
           <span>총 배팅: {formatWon(totalBet)}</span>
-          <strong>예상 당첨: {formatWon(expectedWin)}</strong>
+          <strong>예상 이득: {formatWon(expectedProfit)}</strong>
         </div>
 
         <div className="modal-actions">

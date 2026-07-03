@@ -46,7 +46,7 @@ export function ActiveBetsPage() {
       ) : (
         bets.map((bet) => {
           const totalBet = bet.participants.reduce((s, p) => s + p.amount, 0);
-          const expectedWin = Math.round(totalBet * bet.multiplier);
+          const expectedProfit = Math.round(totalBet * bet.multiplier) - totalBet;
           const editable = canEdit(bet.walletId);
 
           return (
@@ -72,7 +72,7 @@ export function ActiveBetsPage() {
 
               <div className="bet-summary">
                 <span>총 배팅: {formatWon(totalBet)}</span>
-                <strong>예상 당첨: {formatWon(expectedWin)}</strong>
+                <strong>예상 이득: {formatWon(expectedProfit)}</strong>
               </div>
 
               <div className="bet-actions" onClick={(e) => e.stopPropagation()}>

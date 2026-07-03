@@ -52,7 +52,7 @@ export async function createBet(
   title: string,
   multiplier: number,
   participants: BetParticipant[],
-  friends: Friend[],
+  _friends: Friend[],
 ) {
   if (!db) return;
 
@@ -64,23 +64,6 @@ export async function createBet(
     participants,
     createdAt: serverTimestamp(),
   });
-
-  for (const participant of participants) {
-    const friend = friends.find((f) => f.id === participant.friendId);
-    if (!friend) continue;
-
-    const nextAmount = friend.amount - participant.amount;
-    await updateFriendAmount(walletId, friend, nextAmount, walletId);
-    await recordTransaction(
-      walletId,
-      friend.id,
-      friend.name,
-      -participant.amount,
-      nextAmount,
-      "bet",
-      `배팅: ${title}`,
-    );
-  }
 }
 
 export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided", friends: Friend[]) {
@@ -92,39 +75,53 @@ export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided", fr
   });
 
   if (outcome === "won") {
+    // 당첨: 원금 제외 이득분만 추가 (금액 × 배당 - 금액)
     for (const participant of bet.participants) {
       const friend = friends.find((f) => f.id === participant.friendId);
       if (!friend) continue;
 
-      const winnings = Math.round(participant.amount * bet.multiplier);
-      const nextAmount = friend.amount + winnings;
+      const profit = Math.round(participant.amount * bet.multiplier) - participant.amount;
+      const nextAmount = friend.amount + profit;
       await updateFriendAmount(bet.walletId, friend, nextAmount, bet.walletId);
       await recordTransaction(
         bet.walletId,
         friend.id,
         friend.name,
-        winnings,
+        profit,
         nextAmount,
         "win",
-        `당첨: ${bet.title} ×${bet.multiplier}`,
+        `당첨: ${bet.title} ×${bet.multiplier} (이득분)`,
+      );
+    }
+  } else if (outcome === "lost") {
+    // 낙첨: 배팅금액만큼 차감
+    for (const participant of bet.participants) {
+      const friend = friends.find((f) => f.id === participant.friendId);
+      if (!friend) continue;
+
+      const nextAmount = friend.amount - participant.amount;
+      await updateFriendAmount(bet.walletId, friend, nextAmount, bet.walletId);
+      await recordTransaction(
+        bet.walletId,
+        friend.id,
+        friend.name,
+        -participant.amount,
+        nextAmount,
+        "bet",
+        `낙첨: ${bet.title}`,
       );
     }
   } else if (outcome === "voided") {
+    // 적특: 기록만 남김 (0원 처리)
     for (const participant of bet.participants) {
-      const friend = friends.find((f) => f.id === participant.friendId);
-      if (!friend) continue;
-
-      const refund = participant.amount;
-      const nextAmount = friend.amount + refund;
-      await updateFriendAmount(bet.walletId, friend, nextAmount, bet.walletId);
       await recordTransaction(
         bet.walletId,
-        friend.id,
-        friend.name,
-        refund,
-        nextAmount,
+        participant.friendId,
+        participant.friendName,
+        0,
+        friends.find((f) => f.id === participant.friendId)?.amount ?? 0,
         "adjust",
-        `적특 환불: ${bet.title}`,
+        `적특: ${bet.title}`,
       );
     }
   }
@@ -133,7 +130,7 @@ export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided", fr
 export async function addParticipantToBet(
   bet: Bet,
   newParticipant: BetParticipant,
-  friends: Friend[],
+  _friends: Friend[],
 ) {
   if (!db) return;
 
@@ -153,19 +150,4 @@ export async function addParticipantToBet(
       amount: p.amount,
     })),
   });
-
-  const friend = friends.find((f) => f.id === newParticipant.friendId);
-  if (!friend) return;
-
-  const nextAmount = friend.amount - newParticipant.amount;
-  await updateFriendAmount(bet.walletId, friend, nextAmount, bet.walletId);
-  await recordTransaction(
-    bet.walletId,
-    friend.id,
-    friend.name,
-    -newParticipant.amount,
-    nextAmount,
-    "bet",
-    `배팅 추가: ${bet.title}`,
-  );
 }
