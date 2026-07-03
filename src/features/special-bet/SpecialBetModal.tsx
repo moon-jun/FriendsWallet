@@ -10,19 +10,21 @@ type SpecialBetModalProps = {
   open: boolean;
   targetCount: number;
   onClose: () => void;
-  onApply: (delta: number) => void;
+  onApply: (delta: number, reason: string) => void;
 };
 
 export function SpecialBetModal({ open, targetCount, onClose, onApply }: SpecialBetModalProps) {
   const [amount, setAmount] = useState("");
   const [multiplier, setMultiplier] = useState("");
+  const [reason, setReason] = useState("");
   const result = useMemo(
     () => calculateSpecialBet(parseNumberInput(amount), Number(multiplier || 0)),
     [amount, multiplier],
   );
 
   function submit() {
-    onApply(result);
+    onApply(result, reason || "사유 없음");
+    setReason("");
     onClose();
   }
 
@@ -40,6 +42,11 @@ export function SpecialBetModal({ open, targetCount, onClose, onApply }: Special
           placeholder="배당"
           value={multiplier}
           onChange={(event) => setMultiplier(event.target.value)}
+        />
+        <Input
+          placeholder="사유 (선택사항)"
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
         />
         <div className="special-preview">
           <span>{targetCount}명에게 추가</span>

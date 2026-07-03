@@ -10,16 +10,18 @@ type AdjustAmountProps = {
   title: string;
   open: boolean;
   onClose: () => void;
-  onApplyDelta: (delta: number) => void;
-  onSetAmount?: (amount: number) => void;
+  onApplyDelta: (delta: number, reason: string) => void;
+  onSetAmount?: (amount: number, reason: string) => void;
 };
 
 export function AdjustAmount({ title, open, onClose, onApplyDelta, onSetAmount }: AdjustAmountProps) {
   const [value, setValue] = useState("");
+  const [reason, setReason] = useState("");
   const customAmount = parseNumberInput(value);
 
   function apply(delta: number) {
-    onApplyDelta(delta);
+    onApplyDelta(delta, reason || "사유 없음");
+    setReason("");
     onClose();
   }
 
@@ -40,12 +42,20 @@ export function AdjustAmount({ title, open, onClose, onApplyDelta, onSetAmount }
           value={value}
           onChange={(event) => setValue(event.target.value)}
         />
+        <Input
+          placeholder="사유 (선택사항)"
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+        />
         <div className="adjust-grid">
           <Button variant="danger" disabled={!customAmount} onClick={() => apply(-Math.abs(customAmount))}>
             빼기
           </Button>
           {onSetAmount ? (
-            <Button variant="secondary" disabled={!value} onClick={() => onSetAmount(customAmount)}>
+            <Button variant="secondary" disabled={!value} onClick={() => {
+              onSetAmount(customAmount, reason || "사유 없음");
+              setReason("");
+            }}>
               금액 설정
             </Button>
           ) : (

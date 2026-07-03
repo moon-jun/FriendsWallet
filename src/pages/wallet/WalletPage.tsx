@@ -58,7 +58,7 @@ export function WalletPage() {
   const allIds = friends.map((friend) => friend.id);
   const isAllSelected = allSelected(allIds, selectedIds);
 
-  async function applyToFriends(targets: Friend[], delta: number) {
+  async function applyToFriends(targets: Friend[], delta: number, reason: string) {
     const targetIds = new Set(targets.map((friend) => friend.id));
     setFriends((current) =>
       current.map((friend) =>
@@ -84,12 +84,12 @@ export function WalletPage() {
         delta,
         nextAmount,
         "adjust",
-        delta >= 0 ? `+${formatWon(delta)}` : formatWon(delta),
+        reason,
       );
     }
   }
 
-  async function setSingleAmount(friend: Friend, amount: number) {
+  async function setSingleAmount(friend: Friend, amount: number, reason: string) {
     const delta = amount - friend.amount;
     setFriends((current) =>
       current.map((item) =>
@@ -106,7 +106,7 @@ export function WalletPage() {
       delta,
       amount,
       "adjust",
-      `금액 설정: ${formatWon(amount)}`,
+      reason,
     );
     setAdjustTarget(null);
   }
@@ -186,12 +186,12 @@ export function WalletPage() {
             title={adjustTarget === "multi" ? "일괄 금액 조절" : "금액 조절"}
             open={adjustTarget !== null}
             onClose={() => setAdjustTarget(null)}
-            onApplyDelta={(delta) => {
+            onApplyDelta={(delta, reason) => {
               const targets = adjustTarget === "multi" ? selectedFriends : adjustTarget ? [adjustTarget] : [];
-              void applyToFriends(targets, delta);
+              void applyToFriends(targets, delta, reason);
             }}
             onSetAmount={
-              adjustTarget && adjustTarget !== "multi" ? (amount) => void setSingleAmount(adjustTarget, amount) : undefined
+              adjustTarget && adjustTarget !== "multi" ? (amount, reason) => void setSingleAmount(adjustTarget, amount, reason) : undefined
             }
           />
 
@@ -199,7 +199,7 @@ export function WalletPage() {
             open={specialOpen}
             targetCount={selectedFriends.length}
             onClose={() => setSpecialOpen(false)}
-            onApply={(delta) => void applyToFriends(selectedFriends, delta)}
+            onApply={(delta, reason) => void applyToFriends(selectedFriends, delta, reason)}
           />
 
           <CreateBetModal
