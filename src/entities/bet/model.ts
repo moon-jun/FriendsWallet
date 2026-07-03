@@ -6,7 +6,7 @@ export type BetParticipant = {
   amount: number;
 };
 
-export type BetStatus = "active" | "won" | "lost";
+export type BetStatus = "active" | "won" | "lost" | "voided";
 
 export type Bet = {
   id: string;
