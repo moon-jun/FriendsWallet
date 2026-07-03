@@ -9,7 +9,6 @@ import { WALLET_LABELS } from "../../shared/config/constants";
 import { formatWon, parseNumberInput } from "../../shared/lib/format";
 import { Button } from "../../shared/ui/Button";
 import { Checkbox } from "../../shared/ui/Checkbox";
-import { Input } from "../../shared/ui/Input";
 import { Modal } from "../../shared/ui/Modal";
 import "./ActiveBetsPage.css";
 
@@ -117,6 +116,13 @@ export function ActiveBetsPage() {
 
 /* ── 참가자 추가 모달 ── */
 
+type ParticipantEntry = {
+  friendId: string;
+  friendName: string;
+  checked: boolean;
+  amount: string;
+};
+
 type AddParticipantModalProps = {
   bet: Bet;
   friends: Friend[];
@@ -124,25 +130,38 @@ type AddParticipantModalProps = {
 };
 
 function AddParticipantModal({ bet, friends, onClose }: AddParticipantModalProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [amount, setAmount] = useState("");
+  const [entries, setEntries] = useState<ParticipantEntry[]>(() =>
+    friends.map((f) => ({ friendId: f.id, friendName: f.name, checked: false, amount: "" })),
+  );
 
   const existingIds = new Set(bet.participants.map((p) => p.friendId));
-  const availableFriends = friends;
-  const parsedAmount = parseNumberInput(amount);
-  const selectedFriend = friends.find((f) => f.id === selectedId);
-  const canSubmit = selectedId && parsedAmount > 0;
+
+  function toggleEntry(index: number) {
+    setEntries((prev) =>
+      prev.map((e, i) => (i === index ? { ...e, checked: !e.checked } : e)),
+    );
+  }
+
+  function setEntryAmount(index: number, value: string) {
+    setEntries((prev) =>
+      prev.map((e, i) => (i === index ? { ...e, amount: value } : e)),
+    );
+  }
+
+  const checkedEntries = entries.filter((e) => e.checked && parseNumberInput(e.amount) > 0);
+  const totalAdd = checkedEntries.reduce((sum, e) => sum + parseNumberInput(e.amount), 0);
+  const canSubmit = checkedEntries.length > 0 && totalAdd > 0;
 
   async function handleSubmit() {
-    if (!selectedFriend || !parsedAmount) return;
-
-    await addParticipantToBet(
-      bet,
-      { friendId: selectedFriend.id, friendName: selectedFriend.name, amount: parsedAmount },
-      friends,
-    );
-    setSelectedId(null);
-    setAmount("");
+    for (const entry of checkedEntries) {
+      const parsed = parseNumberInput(entry.amount);
+      if (parsed <= 0) continue;
+      await addParticipantToBet(
+        bet,
+        { friendId: entry.friendId, friendName: entry.friendName, amount: parsed },
+        friends,
+      );
+    }
     onClose();
   }
 
@@ -150,32 +169,40 @@ function AddParticipantModal({ bet, friends, onClose }: AddParticipantModalProps
     <Modal title={`${bet.title} — 참가자 추가`} open onClose={onClose}>
       <div className="add-participant-form">
         <div className="participant-list">
-          {availableFriends.map((f) => (
+          {entries.map((entry, index) => (
             <div
-              className={`participant-item ${selectedId === f.id ? "selected" : ""}`}
-              key={f.id}
-              onClick={() => setSelectedId(f.id)}
+              className={`participant-item ${entry.checked ? "selected" : ""}`}
+              key={entry.friendId}
+              onClick={() => toggleEntry(index)}
             >
               <Checkbox
-                checked={selectedId === f.id}
-                onChange={() => setSelectedId(f.id)}
-                aria-label={`${f.name} 선택`}
+                checked={entry.checked}
+                onChange={() => toggleEntry(index)}
+                aria-label={`${entry.friendName} 선택`}
               />
-              <label>{f.name}</label>
-              {existingIds.has(f.id) && (
+              <label>{entry.friendName}</label>
+              {existingIds.has(entry.friendId) && (
                 <span className="already-in-badge">참여중</span>
+              )}
+              {entry.checked && (
+                <input
+                  className="participant-amount-input"
+                  inputMode="numeric"
+                  placeholder="금액"
+                  value={entry.amount}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => setEntryAmount(index, e.target.value)}
+                />
               )}
             </div>
           ))}
         </div>
 
-        {selectedId && (
-          <Input
-            inputMode="numeric"
-            placeholder="배팅 금액"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+        {totalAdd > 0 && (
+          <div className="bet-preview">
+            <span>{checkedEntries.length}명 추가</span>
+            <strong>총 {formatWon(totalAdd)}</strong>
+          </div>
         )}
 
         <div className="modal-actions">
@@ -190,3 +217,4 @@ function AddParticipantModal({ bet, friends, onClose }: AddParticipantModalProps
     </Modal>
   );
 }
+
