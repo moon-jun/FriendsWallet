@@ -16,6 +16,12 @@
   padding: 18px;
   background: var(--color-surface);
   box-shadow: 0 2px 8px var(--color-shadow);
+  transition: opacity 200ms ease;
+}
+
+.bet-card-settling {
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .bet-header {

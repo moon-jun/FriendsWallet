@@ -2,9 +2,11 @@ import {
   collection,
   doc,
   getDoc,
+  increment,
   onSnapshot,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import type { Friend } from "../friend/model";
 import type { WalletId } from "./model";
@@ -79,9 +81,37 @@ export async function updateFriendAmount(
   return delta;
 }
 
+/** 원자적 증감 — 동시 호출에도 금액이 꼬이지 않음 */
+export async function incrementFriendAmount(
+  walletId: WalletId,
+  friendId: string,
+  friendName: string,
+  delta: number,
+  updatedBy: WalletId,
+) {
+  if (!db) return;
+
+  const ref = doc(db, "wallets", walletId, "friends", friendId);
+  await updateDoc(ref, {
+    name: friendName,
+    amount: increment(delta),
+    lastDelta: delta,
+    updatedBy,
+    updatedAt: serverTimestamp(),
+  }).catch(async () => {
+    // 문서가 없으면 setDoc으로 생성
+    await setDoc(ref, {
+      name: friendName,
+      amount: delta,
+      lastDelta: delta,
+      updatedBy,
+      updatedAt: serverTimestamp(),
+    });
+  });
+}
+
 export async function getWalletPassword(walletId: WalletId) {
   if (!db) return null;
   const snapshot = await getDoc(doc(db, "auth", walletId));
   return snapshot.exists() ? String(snapshot.data().password ?? "") : null;
 }
-

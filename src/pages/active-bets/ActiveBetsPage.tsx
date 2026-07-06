@@ -18,6 +18,7 @@ export function ActiveBetsPage() {
     junhyun: [],
     byunghun: [],
   });
+  const [settlingIds, setSettlingIds] = useState<Set<string>>(new Set());
   const [addTarget, setAddTarget] = useState<Bet | null>(null);
   const { canEdit } = useAuth();
 
@@ -35,8 +36,18 @@ export function ActiveBetsPage() {
   }, []);
 
   async function handleSettle(bet: Bet, outcome: "won" | "lost" | "voided") {
-    const friends = friendsMap[bet.walletId] ?? [];
-    await settleBet(bet, outcome, friends);
+    if (settlingIds.has(bet.id)) return; // 이미 처리 중
+
+    setSettlingIds((prev) => new Set(prev).add(bet.id));
+    try {
+      await settleBet(bet, outcome);
+    } finally {
+      setSettlingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(bet.id);
+        return next;
+      });
+    }
   }
 
   return (
@@ -48,12 +59,13 @@ export function ActiveBetsPage() {
           const totalBet = bet.participants.reduce((s, p) => s + p.amount, 0);
           const expectedProfit = Math.round(totalBet * bet.multiplier) - totalBet;
           const editable = canEdit(bet.walletId);
+          const settling = settlingIds.has(bet.id);
 
           return (
             <article
-              className="bet-card"
+              className={`bet-card ${settling ? "bet-card-settling" : ""}`}
               key={bet.id}
-              onClick={() => editable && setAddTarget(bet)}
+              onClick={() => editable && !settling && setAddTarget(bet)}
             >
               <div className="bet-header">
                 <span className="bet-title">{bet.title}</span>
@@ -78,24 +90,24 @@ export function ActiveBetsPage() {
               <div className="bet-actions" onClick={(e) => e.stopPropagation()}>
                 <Button
                   className="button-win"
-                  disabled={!editable}
+                  disabled={!editable || settling}
                   onClick={() => void handleSettle(bet, "won")}
                 >
-                  🎉 당첨
+                  {settling ? "처리 중..." : "🎉 당첨"}
                 </Button>
                 <Button
                   className="button-lose"
-                  disabled={!editable}
+                  disabled={!editable || settling}
                   onClick={() => void handleSettle(bet, "lost")}
                 >
-                  💨 낙첨
+                  {settling ? "처리 중..." : "💨 낙첨"}
                 </Button>
                 <Button
                   className="button-void"
-                  disabled={!editable}
+                  disabled={!editable || settling}
                   onClick={() => void handleSettle(bet, "voided")}
                 >
-                  🚫 적특
+                  {settling ? "처리 중..." : "🚫 적특"}
                 </Button>
               </div>
             </article>
@@ -217,4 +229,3 @@ function AddParticipantModal({ bet, friends, onClose }: AddParticipantModalProps
     </Modal>
   );
 }
-
