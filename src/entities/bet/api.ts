@@ -64,6 +64,9 @@ export async function createBet(
   });
 }
 
+/**
+ * 당첨/낙첨/적특 처리 — getDoc으로 최신 잔액을 읽어 balanceAfter를 정확히 기록
+ */
 export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided") {
   if (!db) return;
 
@@ -74,13 +77,13 @@ export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided") {
 
   if (outcome === "won") {
     // 당첨: 원금 제외 이득분만 추가 (금액 × 배당 - 금액)
-    for (const participant of bet.participants) {
-      const snap = await getDoc(doc(db, "wallets", bet.walletId, "friends", participant.friendId));
+    const promises = bet.participants.map(async (participant) => {
+      const snap = await getDoc(doc(db!, "wallets", bet.walletId, "friends", participant.friendId));
       const currentAmount = Number(snap.data()?.amount ?? 0);
       const profit = Math.round(participant.amount * bet.multiplier) - participant.amount;
       const nextAmount = currentAmount + profit;
 
-      await updateDoc(doc(db, "wallets", bet.walletId, "friends", participant.friendId), {
+      await updateDoc(doc(db!, "wallets", bet.walletId, "friends", participant.friendId), {
         amount: nextAmount,
         lastDelta: profit,
         updatedBy: bet.walletId,
@@ -95,15 +98,16 @@ export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided") {
         "win",
         `당첨: ${bet.title} ×${bet.multiplier} (이득분)`,
       );
-    }
+    });
+    await Promise.all(promises);
   } else if (outcome === "lost") {
     // 낙첨: 배팅금액만큼 차감
-    for (const participant of bet.participants) {
-      const snap = await getDoc(doc(db, "wallets", bet.walletId, "friends", participant.friendId));
+    const promises = bet.participants.map(async (participant) => {
+      const snap = await getDoc(doc(db!, "wallets", bet.walletId, "friends", participant.friendId));
       const currentAmount = Number(snap.data()?.amount ?? 0);
       const nextAmount = currentAmount - participant.amount;
 
-      await updateDoc(doc(db, "wallets", bet.walletId, "friends", participant.friendId), {
+      await updateDoc(doc(db!, "wallets", bet.walletId, "friends", participant.friendId), {
         amount: nextAmount,
         lastDelta: -participant.amount,
         updatedBy: bet.walletId,
@@ -118,11 +122,12 @@ export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided") {
         "bet",
         `낙첨: ${bet.title}`,
       );
-    }
+    });
+    await Promise.all(promises);
   } else if (outcome === "voided") {
     // 적특: 기록만 남김 (0원 처리)
-    for (const participant of bet.participants) {
-      const snap = await getDoc(doc(db, "wallets", bet.walletId, "friends", participant.friendId));
+    const promises = bet.participants.map(async (participant) => {
+      const snap = await getDoc(doc(db!, "wallets", bet.walletId, "friends", participant.friendId));
       const currentAmount = Number(snap.data()?.amount ?? 0);
       await recordTransaction(
         bet.walletId,
@@ -133,7 +138,8 @@ export async function settleBet(bet: Bet, outcome: "won" | "lost" | "voided") {
         "adjust",
         `적특: ${bet.title}`,
       );
-    }
+    });
+    await Promise.all(promises);
   }
 }
 
