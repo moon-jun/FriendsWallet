@@ -125,7 +125,7 @@ export function WalletPage() {
     multiplier: number,
     participants: { friendId: string; friendName: string; amount: number }[],
   ) {
-    await createBet(walletId, title, multiplier, participants, friends);
+    await createBet(walletId, title, multiplier, participants);
   }
 
   const isWalletTab = activeTab !== "active-bets";

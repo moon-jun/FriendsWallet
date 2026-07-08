@@ -35,8 +35,7 @@ export function ActiveBetsPage() {
   }, []);
 
   async function handleSettle(bet: Bet, outcome: "won" | "lost" | "voided") {
-    const friends = friendsMap[bet.walletId] ?? [];
-    await settleBet(bet, outcome, friends);
+    await settleBet(bet, outcome);
   }
 
   return (
@@ -159,7 +158,6 @@ function AddParticipantModal({ bet, friends, onClose }: AddParticipantModalProps
       await addParticipantToBet(
         bet,
         { friendId: entry.friendId, friendName: entry.friendName, amount: parsed },
-        friends,
       );
     }
     onClose();
