@@ -19,9 +19,9 @@
 
 .participant-item {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-height: 52px;
   border-radius: var(--radius-control);
   padding: 8px 12px;
@@ -66,4 +66,29 @@
 
 .bet-preview strong {
   color: var(--color-blue);
+}
+
+.quick-amount-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.quick-amount-btn {
+  padding: 4px 8px;
+  border: 1.5px solid var(--color-blue);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--color-blue);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+  line-height: 1.4;
+}
+
+.quick-amount-btn:active {
+  background: var(--color-blue);
+  color: #fff;
 }

@@ -51,6 +51,16 @@ export function CreateBetModal({ open, friends, onClose, onSubmit }: CreateBetMo
     );
   }
 
+  function addQuickAmount(index: number, amount: number) {
+    setEntries((prev) =>
+      prev.map((entry, i) => {
+        if (i !== index) return entry;
+        const current = parseNumberInput(entry.amount);
+        return { ...entry, amount: String(current + amount) };
+      }),
+    );
+  }
+
   const checkedEntries = entries.filter((e) => e.checked);
   const totalBet = useMemo(
     () => checkedEntries.reduce((sum, e) => sum + parseNumberInput(e.amount), 0),
@@ -105,13 +115,27 @@ export function CreateBetModal({ open, friends, onClose, onSubmit }: CreateBetMo
               />
               <label>{entry.friendName}</label>
               {entry.checked && (
-                <input
-                  className="participant-amount-input"
-                  inputMode="numeric"
-                  placeholder="금액"
-                  value={entry.amount}
-                  onChange={(e) => setParticipantAmount(index, e.target.value)}
-                />
+                <>
+                  <div className="quick-amount-buttons">
+                    {[50000, 100000, 200000].map((amt) => (
+                      <button
+                        key={amt}
+                        type="button"
+                        className="quick-amount-btn"
+                        onClick={() => addQuickAmount(index, amt)}
+                      >
+                        {amt / 10000}만
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    className="participant-amount-input"
+                    inputMode="numeric"
+                    placeholder="금액"
+                    value={entry.amount}
+                    onChange={(e) => setParticipantAmount(index, e.target.value)}
+                  />
+                </>
               )}
             </div>
           ))}
