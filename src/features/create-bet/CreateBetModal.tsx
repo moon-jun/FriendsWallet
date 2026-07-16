@@ -117,14 +117,18 @@ export function CreateBetModal({ open, friends, onClose, onSubmit }: CreateBetMo
               {entry.checked && (
                 <>
                   <div className="quick-amount-buttons">
-                    {[50000, 100000, 200000].map((amt) => (
+                    {[
+                      { label: "1만", value: 10000 },
+                      { label: "5만", value: 50000 },
+                      { label: "10만", value: 100000 },
+                    ].map(({ label, value }) => (
                       <button
-                        key={amt}
+                        key={value}
                         type="button"
                         className="quick-amount-btn"
-                        onClick={() => addQuickAmount(index, amt)}
+                        onClick={() => addQuickAmount(index, value)}
                       >
-                        {amt / 10000}만
+                        {label}
                       </button>
                     ))}
                   </div>

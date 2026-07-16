@@ -70,7 +70,7 @@
 
 .quick-amount-buttons {
   display: flex;
-  gap: 4px;
+  gap: 8px;
 }
 
 .quick-amount-btn {
