@@ -1,0 +1,94 @@
+.weekly-history {
+  margin-top: 24px;
+}
+
+.weekly-history-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 12px;
+  color: var(--color-text);
+}
+
+.weekly-history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.weekly-record-card {
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: 0 2px 12px var(--color-shadow);
+  overflow: hidden;
+}
+
+.weekly-record-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.weekly-record-date {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.weekly-record-total {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.weekly-record-chevron {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-left: 4px;
+}
+
+.weekly-record-results {
+  border-top: 1px solid var(--color-line);
+  padding: 8px 16px 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.weekly-result-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.weekly-result-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.weekly-result-end {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.weekly-result-pnl {
+  font-size: 14px;
+  font-weight: 800;
+  min-width: 70px;
+  text-align: right;
+}
+
+.positive {
+  color: var(--color-green);
+}
+
+.negative {
+  color: var(--color-red);
+}

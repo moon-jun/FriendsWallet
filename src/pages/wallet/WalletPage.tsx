@@ -6,12 +6,15 @@ import { allSelected, toggleSelected } from "../../features/multi-select/model";
 import { SpecialBetModal } from "../../features/special-bet/SpecialBetModal";
 import { CreateBetModal } from "../../features/create-bet/CreateBetModal";
 import { TransactionHistoryModal } from "../../features/transaction-history/TransactionHistoryModal";
+import { WeeklyHistory } from "../../features/weekly-history/WeeklyHistory";
 import type { Friend } from "../../entities/friend/model";
 import type { WalletId } from "../../entities/wallet/model";
 import type { Bet } from "../../entities/bet/model";
+import type { WeeklyRecord } from "../../entities/weekly-record/model";
 import { subscribeFriends, updateFriendAmount } from "../../entities/wallet/api";
 import { createBet, subscribeActiveBets } from "../../entities/bet/api";
 import { recordTransaction } from "../../entities/transaction/api";
+import { checkAndProcessWeeklyReset, subscribeWeeklyRecords } from "../../entities/weekly-record/api";
 import { useAuth } from "../../app/providers/AuthProvider";
 import { hasFirebaseConfig } from "../../shared/lib/firebase";
 import { formatWon } from "../../shared/lib/format";
@@ -30,6 +33,8 @@ export function WalletPage() {
   const [betOpen, setBetOpen] = useState(false);
   const [historyTarget, setHistoryTarget] = useState<Friend | null>(null);
   const [activeBets, setActiveBets] = useState<Bet[]>([]);
+  const [weeklyRecords, setWeeklyRecords] = useState<WeeklyRecord[]>([]);
+  const [weeklyChecked, setWeeklyChecked] = useState(false);
   const initialLoad = useRef(true);
   const { canEdit, authenticatedWallet } = useAuth();
 
@@ -50,7 +55,22 @@ export function WalletPage() {
     if (activeTab === "active-bets") return;
     setSelectionMode(false);
     setSelectedIds([]);
+    setWeeklyChecked(false);
     return subscribeFriends(activeTab, setFriends);
+  }, [activeTab]);
+
+  // 주간 리셋 체크 — friends 로드 후 1회 실행
+  useEffect(() => {
+    if (activeTab === "active-bets") return;
+    if (weeklyChecked || friends.length === 0) return;
+    setWeeklyChecked(true);
+    void checkAndProcessWeeklyReset(activeTab, friends);
+  }, [activeTab, friends, weeklyChecked]);
+
+  // 주간 기록 구독
+  useEffect(() => {
+    if (activeTab === "active-bets") return;
+    return subscribeWeeklyRecords(activeTab, setWeeklyRecords);
   }, [activeTab]);
 
   const total = useMemo(() => friends.reduce((sum, friend) => sum + friend.amount, 0), [friends]);
@@ -134,7 +154,7 @@ export function WalletPage() {
     <main className="app-shell">
       <header className="top-bar">
         <div>
-          <h1 className="app-title">프로젝트 비자금</h1>
+          <h1 className="app-title">❄️ 차갑게 눈덩이처럼 불어나는 지갑</h1>
           <p className="subtitle">{hasFirebaseConfig ? "실시간 동기화 중" : "Firebase 설정 전 로컬 미리보기"}</p>
         </div>
         {isWalletTab && <AuthButton walletId={walletId} />}
@@ -181,6 +201,8 @@ export function WalletPage() {
             <span>총합</span>
             <strong>{formatWon(total)}</strong>
           </section>
+
+          <WeeklyHistory records={weeklyRecords} />
 
           <AdjustAmount
             title={adjustTarget === "multi" ? "일괄 금액 조절" : "금액 조절"}
