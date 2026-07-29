@@ -15,11 +15,11 @@ function createFlake(width: number, height: number, fromTop = false): Flake {
   return {
     x: Math.random() * width,
     y: fromTop ? Math.random() * -height : Math.random() * height,
-    r: Math.random() * 3 + 1.5,
-    speed: Math.random() * 1.2 + 0.4,
-    opacity: Math.random() * 0.5 + 0.3,
-    swing: Math.random() * 40 + 10,
-    swingSpeed: Math.random() * 0.02 + 0.008,
+    r: Math.random() * 6 + 3,
+    speed: Math.random() * 1.8 + 0.6,
+    opacity: Math.random() * 0.4 + 0.35,
+    swing: Math.random() * 50 + 15,
+    swingSpeed: Math.random() * 0.025 + 0.008,
     swingOffset: Math.random() * Math.PI * 2,
   };
 }
@@ -46,7 +46,7 @@ export function Snowfall() {
 
     function init() {
       if (!canvas) return;
-      flakes = Array.from({ length: 70 }, () =>
+      flakes = Array.from({ length: 160 }, () =>
         createFlake(canvas.width, canvas.height),
       );
     }

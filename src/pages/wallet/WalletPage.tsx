@@ -21,6 +21,7 @@ import { formatWon } from "../../shared/lib/format";
 import { FriendCardList } from "../../widgets/friend-card-list/FriendCardList";
 import { WalletTabs, type TabValue } from "../../widgets/wallet-tabs/WalletTabs";
 import { ActiveBetsPage } from "../active-bets/ActiveBetsPage";
+import { SettlementPage } from "../settlement/SettlementPage";
 import "./WalletPage.css";
 
 export function WalletPage() {
@@ -38,7 +39,7 @@ export function WalletPage() {
   const initialLoad = useRef(true);
   const { canEdit, authenticatedWallet } = useAuth();
 
-  const walletId = activeTab === "active-bets" ? "junhyun" : activeTab;
+  const walletId = (activeTab === "active-bets" || activeTab === "settlement") ? "junhyun" : activeTab;
   const editable = canEdit(walletId);
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export function WalletPage() {
   }, []);
 
   useEffect(() => {
-    if (activeTab === "active-bets") return;
+    if (activeTab === "active-bets" || activeTab === "settlement") return;
     setSelectionMode(false);
     setSelectedIds([]);
     setWeeklyChecked(false);
@@ -61,7 +62,7 @@ export function WalletPage() {
 
   // 주간 리셋 체크 — friends 로드 후 1회 실행
   useEffect(() => {
-    if (activeTab === "active-bets") return;
+    if (activeTab === "active-bets" || activeTab === "settlement") return;
     if (weeklyChecked || friends.length === 0) return;
     setWeeklyChecked(true);
     void checkAndProcessWeeklyReset(activeTab, friends);
@@ -69,7 +70,7 @@ export function WalletPage() {
 
   // 주간 기록 구독
   useEffect(() => {
-    if (activeTab === "active-bets") return;
+    if (activeTab === "active-bets" || activeTab === "settlement") return;
     return subscribeWeeklyRecords(activeTab, setWeeklyRecords);
   }, [activeTab]);
 
@@ -148,7 +149,7 @@ export function WalletPage() {
     await createBet(walletId, title, multiplier, participants);
   }
 
-  const isWalletTab = activeTab !== "active-bets";
+  const isWalletTab = activeTab !== "active-bets" && activeTab !== "settlement";
 
   return (
     <main className="app-shell">
@@ -239,6 +240,8 @@ export function WalletPage() {
             onClose={() => setHistoryTarget(null)}
           />
         </>
+      ) : activeTab === "settlement" ? (
+        <SettlementPage />
       ) : (
         <ActiveBetsPage />
       )}

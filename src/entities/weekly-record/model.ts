@@ -23,3 +23,27 @@ export function getMondayDateString(date: Date = new Date()): string {
   d.setDate(d.getDate() + diff);
   return d.toISOString().slice(0, 10);
 }
+
+/** "YYYY-MM-DD" 형식의 월요일 날짜를 "N월 M주차" 형식으로 변환 */
+export function getWeekLabel(mondayDateStr: string): string {
+  if (!mondayDateStr) return "";
+  const monday = new Date(mondayDateStr + "T00:00:00");
+  const month = monday.getMonth() + 1;
+
+  // 해당 월의 첫 번째 월요일을 찾아 몇 주차인지 계산
+  const firstDay = new Date(monday.getFullYear(), monday.getMonth(), 1);
+  const firstMonday = new Date(firstDay);
+  const firstDow = firstDay.getDay();
+  const daysToFirstMonday = firstDow === 0 ? 1 : firstDow === 1 ? 0 : 8 - firstDow;
+  firstMonday.setDate(firstDay.getDate() + daysToFirstMonday);
+
+  let weekNum = 1;
+  const cur = new Date(firstMonday);
+  while (cur < monday) {
+    cur.setDate(cur.getDate() + 7);
+    weekNum++;
+  }
+
+  return `${month}월 ${weekNum}주차`;
+}
+
