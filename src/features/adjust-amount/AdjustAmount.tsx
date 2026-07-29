@@ -16,12 +16,13 @@ type AdjustAmountProps = {
 
 export function AdjustAmount({ title, open, onClose, onApplyDelta, onSetAmount }: AdjustAmountProps) {
   const [value, setValue] = useState("");
-  const [reason, setReason] = useState("");
+  const [reason, setReason] = useState("카카오페이");
   const customAmount = parseNumberInput(value);
 
   function apply(delta: number) {
-    onApplyDelta(delta, reason || "사유 없음");
-    setReason("");
+    onApplyDelta(delta, reason || "카카오페이");
+    setValue("");
+    setReason("카카오페이");
     onClose();
   }
 
@@ -53,8 +54,9 @@ export function AdjustAmount({ title, open, onClose, onApplyDelta, onSetAmount }
           </Button>
           {onSetAmount ? (
             <Button variant="secondary" disabled={!value} onClick={() => {
-              onSetAmount(customAmount, reason || "사유 없음");
-              setReason("");
+              onSetAmount(customAmount, reason || "카카오페이");
+              setValue("");
+              setReason("카카오페이");
             }}>
               금액 설정
             </Button>

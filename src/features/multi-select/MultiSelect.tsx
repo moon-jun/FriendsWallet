@@ -30,7 +30,7 @@ export function MultiSelect({
     return (
       <div className="multi-buttons">
         <Button variant="secondary" disabled={!editable} onClick={onStart}>
-          선택
+          충전
         </Button>
         <Button variant="secondary" disabled={!editable} onClick={onOpenBet}>
           배팅
