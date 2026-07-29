@@ -12,6 +12,7 @@ export const FRIEND_SEEDS: Record<WalletId, FriendSeed[]> = {
     { id: "hyunsik", name: "현식" },
     { id: "byunghun", name: "병훈" },
     { id: "taesu", name: "태수" },
+    { id: "junhyun", name: "준현" },
   ],
 };
 
