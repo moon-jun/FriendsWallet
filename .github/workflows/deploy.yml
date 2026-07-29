@@ -23,12 +23,12 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_API_KEY: "AIzaSyBX-WZo7pnLRI43RnZYptW60FXY3ayB0kc"
+          VITE_FIREBASE_AUTH_DOMAIN: "planning-with-ai-a3485.firebaseapp.com"
+          VITE_FIREBASE_PROJECT_ID: "planning-with-ai-a3485"
+          VITE_FIREBASE_STORAGE_BUCKET: "planning-with-ai-a3485.firebasestorage.app"
+          VITE_FIREBASE_MESSAGING_SENDER_ID: "303429363708"
+          VITE_FIREBASE_APP_ID: "1:303429363708:web:b2df55578c0cf0e3de7479"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
