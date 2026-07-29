@@ -6,7 +6,7 @@
 /* 상단 버튼 행: 진행경기 + 정산 */
 .top-tabs {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 6px;
 }
 

@@ -16,7 +16,6 @@ export function ActiveBetsPage() {
   const [bets, setBets] = useState<Bet[]>([]);
   const [friendsMap, setFriendsMap] = useState<Record<WalletId, Friend[]>>({
     junhyun: [],
-    byunghun: [],
   });
   const [settlingIds, setSettlingIds] = useState<Set<string>>(new Set());
   const [addTarget, setAddTarget] = useState<Bet | null>(null);
@@ -27,12 +26,9 @@ export function ActiveBetsPage() {
   }, []);
 
   useEffect(() => {
-    const unsubs = (["junhyun", "byunghun"] as WalletId[]).map((wid) =>
-      subscribeFriends(wid, (friends) =>
-        setFriendsMap((prev) => ({ ...prev, [wid]: friends })),
-      ),
+    return subscribeFriends("junhyun", (friends) =>
+      setFriendsMap((prev) => ({ ...prev, junhyun: friends })),
     );
-    return () => unsubs.forEach((u) => u());
   }, []);
 
   async function handleSettle(bet: Bet, outcome: "won" | "lost" | "voided") {

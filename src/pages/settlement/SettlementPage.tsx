@@ -7,7 +7,7 @@ import { WALLET_LABELS } from "../../shared/config/constants";
 import { formatWon } from "../../shared/lib/format";
 import "./SettlementPage.css";
 
-const WALLET_IDS: WalletId[] = ["junhyun", "byunghun"];
+const WALLET_IDS: WalletId[] = ["junhyun"];
 
 type MergedWeek = {
   weekStartDate: string;
@@ -18,7 +18,6 @@ type MergedWeek = {
 export function SettlementPage() {
   const [recordsMap, setRecordsMap] = useState<Record<WalletId, WeeklyRecord[]>>({
     junhyun: [],
-    byunghun: [],
   });
   const [openKey, setOpenKey] = useState<string | null>(null);
 

@@ -1,6 +1,6 @@
 import type { Friend } from "../friend/model";
 
-export type WalletId = "junhyun" | "byunghun";
+export type WalletId = "junhyun";
 
 export type Wallet = {
   id: WalletId;
